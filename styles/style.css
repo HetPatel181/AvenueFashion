@@ -1,0 +1,150 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+/* Hero Section Styling */
+.hero-section {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+}
+
+/* Product Grid Styling */
+.card {
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-body h5 {
+    color: #333;
+}
+
+/* Carousel Styling */
+.carousel-caption h5 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+}
+
+/* Brand Section Styling */
+.brand-section img {
+    max-width: 60px;
+}
+
+.brand-section h5 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.brand-section p {
+    color: #777;
+}
+
+/* Login Page Styling */
+.login-section {
+    background-color: #f9f9f9;
+}
+
+.card {
+    border: none; /* Optional: remove card border */
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn-primary {
+    width: 100%; /* Full-width button */
+}
+
+.text-center a {
+    text-decoration: none;
+}
+
+.text-center a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+
+/* Registration Page Styling */
+.register-section {
+    background-color: #f9f9f9;
+}
+
+.card {
+    border: none; /* Optional: remove card border */
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn-primary {
+    margin-top: 1rem; /* Space above the button */
+    font-weight: bold; /* Bold text for button */
+}
+
+.text-center h1 {
+    font-weight: bold; /* Bold header for consistency */
+    color: #333; /* Dark color for visibility */
+}
+
+/* Cart Page Styling */
+.cart-section {
+    background-color: #f9f9f9;
+}
+
+.table th,
+.table td {
+    vertical-align: middle; /* Center-align content vertically */
+}
+
+.summary {
+    background-color: #fff; /* White background for summary */
+    padding: 20px; /* Padding around summary */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+}
+
+.summary h3 {
+    margin-bottom: 20px; /* Space below summary header */
+}
+
+/* Contact Us Page Styling */
+.contact-section {
+    background-color: #f9f9f9;
+}
+
+.map-container {
+    margin-top: 20px; /* Space above the map */
+}
+
+h3 {
+    margin-top: 20px; /* Space above section headers */
+}
+
+/* Profile Page Styling */
+.profile-section {
+    background-color: #f9f9f9;
+}
+
+h3 {
+    margin-top: 20px; /* Space above section headers */
+}
+
+.list-group-item {
+    display: flex; /* Use flexbox for better layout */
+    justify-content: space-between; /* Space between item and button */
+}
+
+.text-danger {
+    font-weight: bold; /* Bold text for warnings */
+}
