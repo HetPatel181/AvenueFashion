@@ -1,0 +1,25 @@
+/* Custom styles for admin panel */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.sidebar {
+    background-color: #343a40;
+}
+
+.sidebar .nav-link {
+    color: #ffffff;
+}
+
+.sidebar .nav-link.active {
+    background-color: #495057;
+}

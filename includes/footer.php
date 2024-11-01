@@ -11,6 +11,9 @@
                 <li class="list-inline-item">
                     <a class="text-light" href="contact.php">Contact</a>
                 </li>
+                <li class="list-inline-item">
+                    <a class="text-light" href="privacy_policy.php">Privacy Policy</a>
+                </li>
             </ul>
             <!-- Social Media Links -->
             <div class="mt-3">

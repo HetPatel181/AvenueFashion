@@ -1,57 +1,56 @@
 <?php
-
 session_start();
-
 include("includes/header.php");
+include('includes/db.php'); // Include the database connection
+
+// Fetch products from the database
+$sql = "SELECT id, product_name, product_price, product_sale_price, image1 FROM products";
+$result = $conn->query($sql);
+
+// Check for errors
+if (!$result) {
+    die("Query failed: " . $conn->error);
+}
 ?>
 
 <section class="product-section py-5">
     <div class="container">
         <h1 class="text-center mb-4">Our Products</h1>
         <div class="row">
-            <!-- Product Item 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="images/product1.jpg" class="card-img-top" alt="Product 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Product Name 1</h5>
-                        <p class="card-text">This is a short description of product 1. It's stylish and affordable.</p>
-                        <p class="price">$29.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product Item 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="images/product2.jpg" class="card-img-top" alt="Product 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Product Name 2</h5>
-                        <p class="card-text">This is a short description of product 2. Perfect for every occasion.</p>
-                        <p class="price">$39.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Product Item 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="images/product3.jpg" class="card-img-top" alt="Product 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Product Name 3</h5>
-                        <p class="card-text">This is a short description of product 3. Trendy and chic!</p>
-                        <p class="price">$49.99</p>
-                        <a href="#" class="btn btn-primary">Add to Cart</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Add more product items as needed -->
+            <?php
+            if ($result->num_rows > 0) {
+                // Output each product in a card format
+                while ($row = $result->fetch_assoc()) {
+                    // Decode the image from LONGBLOB format
+                    $imageData = base64_encode($row['image1']);
+                    $imageSrc = 'data:image/jpeg;base64,' . $imageData;
+
+                    echo '<div class="col-md-4 mb-4">';
+                    echo '  <div class="card">';
+                    echo '    <img src="' . $imageSrc . '" class="card-img-top" alt="' . htmlspecialchars($row['product_name']) . '">';
+                    echo '    <div class="card-body">';
+                    echo '      <h5 class="card-title">' . htmlspecialchars($row['product_name']) . '</h5>';
+                    echo '      <p class="price">Price: $' . htmlspecialchars(number_format($row['product_price'], 2)) . '</p>';
+
+                    // Check if sale price is set and display it
+                    if ($row['product_sale_price']) {
+                        echo '      <p class="sale-price">Sale Price: $' . htmlspecialchars(number_format($row['product_sale_price'], 2)) . '</p>';
+                    }
+
+                    echo '      <a href="#" class="btn btn-primary">Add to Cart</a>';
+                    echo '    </div>';
+                    echo '  </div>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<div class="col-12"><p class="text-center">No products found.</p></div>';
+            }
+            ?>
         </div>
     </div>
 </section>
 
 <?php
-
 include("includes/footer.php");
-
+$conn->close(); // Close the database connection
 ?>

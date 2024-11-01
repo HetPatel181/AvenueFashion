@@ -1,8 +1,7 @@
 <?php
 session_start();
-
-// Include the header
 include("includes/header.php");
+include('includes/db.php'); // Include the database connection
 
 // Check if the user is logged in; if not, redirect to the login page
 if (!isset($_SESSION['user_email'])) {
@@ -12,6 +11,66 @@ if (!isset($_SESSION['user_email'])) {
 
 // Get the user's email from the session
 $userEmail = $_SESSION['user_email'];
+
+// Handle password change
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+    $currentPassword = $_POST['currentPassword'];
+    $newPassword = $_POST['newPassword'];
+    $confirmPassword = $_POST['confirmPassword'];
+
+    // Fetch the user's current password from the database
+    $stmt = $conn->prepare("SELECT password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $userEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Verify the current password
+        if (password_verify($currentPassword, $row['password'])) {
+            // Check if new passwords match
+            if ($newPassword === $confirmPassword) {
+                // Hash the new password
+                $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                // Update the password in the database
+                $updateStmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+                $updateStmt->bind_param("ss", $hashedPassword, $userEmail);
+                
+                if ($updateStmt->execute()) {
+                    // Set a session message and redirect to login
+                    $_SESSION['message'] = "Password changed successfully. Please log in again.";
+                    session_destroy();
+                    header("Location: login.php");
+                    exit();
+                } else {
+                    $passwordChangeMessage = "Error updating password: " . $conn->error;
+                }
+            } else {
+                $passwordChangeMessage = "New passwords do not match.";
+            }
+        } else {
+            $passwordChangeMessage = "Current password is incorrect.";
+        }
+    } else {
+        $passwordChangeMessage = "User not found.";
+    }
+}
+
+// Handle account deletion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_account'])) {
+    // Delete the user from the database
+    $deleteStmt = $conn->prepare("DELETE FROM users WHERE email = ?");
+    $deleteStmt->bind_param("s", $userEmail);
+    
+    if ($deleteStmt->execute()) {
+        // Destroy the session and redirect to the registration page
+        session_destroy();
+        header("Location: register.php");
+        exit();
+    } else {
+        $deleteAccountMessage = "Error deleting account: " . $conn->error;
+    }
+}
 ?>
 
 <section class="profile-section py-5">
@@ -28,7 +87,7 @@ $userEmail = $_SESSION['user_email'];
                 <div class="list-group">
                     <a href="#myOrders" class="list-group-item list-group-item-action">My Orders</a>  
                     <a href="#myWishlist" class="list-group-item list-group-item-action">My Wishlist</a>
-                    <a href="#changePassword" class="list-group-item list-group-item-action">Change Password</a>
+                    <a href="#changePassword" class="list-group-item list-group-item-action active">Change Password</a>
                     <a href="#deleteAccount" class="list-group-item list-group-item-action text-danger">Delete Account</a>
                     <a href="logout.php" class="list-group-item list-group-item-action text-warning">Logout</a>
                 </div>
@@ -52,27 +111,45 @@ $userEmail = $_SESSION['user_email'];
                 </div>
                 <div id="changePassword" class="mb-4">
                     <h3>Change Password</h3>
-                    <form>
+                    <?php if (isset($passwordChangeMessage)) : ?>
+                        <div class="alert alert-info"><?php echo $passwordChangeMessage; ?></div>
+                    <?php endif; ?>
+                    <form method="post">
                         <div class="mb-3">
                             <label for="currentPassword" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="currentPassword" required>
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
                         </div>
                         <div class="mb-3">
                             <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="newPassword" required>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Password</button>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                        </div>
+                        <button type="submit" name="change_password" class="btn btn-primary">Update Password</button>
                     </form>
                 </div>
                 <div id="deleteAccount">
                     <h3>Delete Account</h3>
+                    <?php if (isset($deleteAccountMessage)) : ?>
+                        <div class="alert alert-danger"><?php echo $deleteAccountMessage; ?></div>
+                    <?php endif; ?>
                     <p class="text-danger">Are you sure you want to delete your account? This action cannot be undone.</p>
-                    <button class="btn btn-danger">Delete My Account</button>
+                    <form method="post" onsubmit="return confirmDelete();">
+                        <button type="submit" name="delete_account" class="btn btn-danger">Delete My Account</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete your account? This action cannot be undone.");
+    }
+</script>
 
 <?php
 include("includes/footer.php");
