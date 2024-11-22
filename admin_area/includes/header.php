@@ -21,9 +21,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="dashboard.php">Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="user_management.php">User Management</a>
-                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link text-warning" href="logout.php">Logout</a>
                     </li>

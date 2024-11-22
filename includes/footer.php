@@ -9,10 +9,10 @@
                     <a class="text-light" href="about.php">About</a>
                 </li>
                 <li class="list-inline-item">
-                    <a class="text-light" href="contact.php">Contact</a>
+                    <a class="text-light" href="privacy_policy.php">Privacy_policy</a>
                 </li>
                 <li class="list-inline-item">
-                    <a class="text-light" href="privacy_policy.php">Privacy Policy</a>
+                    <a class="text-light" href="contact.php">Contact</a>
                 </li>
             </ul>
             <!-- Social Media Links -->
